@@ -1,9 +1,11 @@
-import React from "react";
+// import React from "react";
 import ReactDOM from "react-dom";
+import Didact from "./mini-react";
 
 let callId = -1;
 const state = [];
 
+// eslint-disable-next-line
 function useState(initialValue) {
   callId = ++callId;
 
@@ -34,8 +36,8 @@ function reRender() {
 }
 
 function Counter() {
-  const [count, setCount] = React.useState(1);
-  const [price, setPrice] = React.useState(100);
+  const [count, setCount] = useState(1);
+  const [price, setPrice] = useState(100);
 
   console.log(count, price);
 
@@ -59,5 +61,17 @@ function Counter() {
   );
 }
 
+/** @jsx Didact.createElement */
+const element = (
+  <div style="background: salmon">
+    <h1>Hello World</h1>
+    <h2 style="text-align:right">from Didact</h2>
+  </div>
+);
+
+console.log(element);
+
 const rootElement = document.getElementById("root");
-ReactDOM.render(<Counter />, rootElement);
+// Didact.render(<MiniReact />, rootElement);
+
+Didact.render(element, rootElement);
