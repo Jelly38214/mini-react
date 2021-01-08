@@ -13,7 +13,8 @@ export function createResource(url) {
   );
 
   return {
-    read() {
+    read(sourceUrl = _url) {
+      _url = sourceUrl;
       if (status === "Pending") {
         if (ajaxRef instanceof Promise) {
           throw ajaxRef;
