@@ -1,9 +1,23 @@
 import React from "react";
+import { defer } from "rxjs";
+import { ajax } from "rxjs/ajax";
+import { map } from "rxjs/operators";
+import { createResource } from "./hooks/useCreateResource";
 
 export class Suspense extends React.Component {
   state = {
     hasError: false
   };
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true };
+  }
+
+  componentDidMount() {
+    this.setState({
+      a: "1"
+    });
+  }
 
   componentDidCatch(error) {
     if (error instanceof Promise) {
@@ -23,30 +37,21 @@ export class Suspense extends React.Component {
   }
 }
 
-let hasGet = false;
-const fetch = () => {
-  if (hasGet) {
-    return "Fetch Successfully.";
-  }
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      hasGet = true;
-      resolve("Data Ready.");
-    }, 2000);
-  });
+const source = createResource("https://api.github.com/users?per_page=5");
+
+export const PromiseThrower = (props) => {
+  const data = source.read();
+  return (
+    <div>
+      {data.map((item) => (
+        <img
+          src={item.avatar_url}
+          alt={item.id}
+          key={item.id}
+          width={100}
+          height={100}
+        />
+      ))}
+    </div>
+  );
 };
-
-export class PromiseThrower extends React.Component {
-  getData() {
-    const data = fetch(); // return a promise that will be catched by Suspense
-    if (data instanceof Promise) {
-      throw data;
-    }
-
-    return data;
-  }
-  render() {
-    const data = this.getData();
-    return data;
-  }
-}

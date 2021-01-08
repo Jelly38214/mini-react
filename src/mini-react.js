@@ -172,7 +172,7 @@ function reconcileChild(workInProgressFiber, elements) {
 
   let prevSibling = null;
 
-  while (index < elements.length || oldFiber) {
+  while (index < elements.length || oldFiber != null) {
     const element = elements[index];
     // TODO compare oldFiber to element
     const newFiber = {
